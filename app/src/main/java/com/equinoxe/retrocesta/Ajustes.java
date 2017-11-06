@@ -10,6 +10,7 @@ import android.widget.Toast;
 
 public class Ajustes extends AppCompatActivity {
     EditText etMail;
+    //EditText etPapeletasFolder;
     String sEMail;
 
     @Override
@@ -18,19 +19,21 @@ public class Ajustes extends AppCompatActivity {
         setContentView(R.layout.activity_ajustes);
 
         etMail = (EditText)findViewById(R.id.etMail);
+        //etPapeletasFolder = (EditText)findViewById()
 
-        cargarEMail();
+        cargarPreferencias();
 
         etMail.setText(sEMail);
     }
 
     protected void onRestart() {
         super.onRestart();
-        cargarEMail();
+        cargarPreferencias();
+
         etMail.setText(sEMail);
     }
 
-    private void cargarEMail() {
+    private void cargarPreferencias() {
         SharedPreferences prefs = getSharedPreferences("Ajustes", Context.MODE_PRIVATE);
         sEMail = prefs.getString("eMail","");
     }

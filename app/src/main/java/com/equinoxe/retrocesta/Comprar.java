@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,6 +16,9 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.io.File;
+import java.util.ArrayList;
 
 public class Comprar extends AppCompatActivity {
     EditText etNick, etNombre, etCorreo, etCantidad, etListaBoletos;
@@ -192,19 +196,30 @@ public class Comprar extends AppCompatActivity {
     }
 
     public void enviarCorreoElectronico(View v) {
-            Intent emailIntent = new Intent(Intent.ACTION_SEND);
+            Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
             emailIntent.setData(Uri.parse("mailto:"));
             String[] to = {sEMail};
             String[] cc = {etCorreo.getText().toString()};
-            String sMensaje = "Los números asignados de la Retro Cesta son:";
+            String sMensaje = "Los números asignados de la RetroCesta son:";
 
+            String filename;
+            File filelocation;
+            ArrayList<Uri> uris = new ArrayList<Uri>();
             for (int i = 0; i < iNumBoletosSeleccionados; i++) {
                 sMensaje = sMensaje + " " + iBoletosSeleccionados[i];
+
+                filename = "Papeletas " + iBoletosSeleccionados[i] + ".pdf";
+                filelocation = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/RetroCesta", filename);
+                Uri u = Uri.fromFile(filelocation);
+                uris.add(u);
             }
+            emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+
+            sMensaje += "\nGracias por participar y suerte.";
 
             emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
             emailIntent.putExtra(Intent.EXTRA_CC, cc);
-            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "Retro Cesta de RetroEntreAmigos.com: Números asignados");
+            emailIntent.putExtra(Intent.EXTRA_SUBJECT, "RetroCesta de RetroEntreAmigos.com: Números asignados");
             emailIntent.putExtra(Intent.EXTRA_TEXT,sMensaje);
             emailIntent.setType("message/rfc822");
             startActivity(Intent.createChooser(emailIntent, "Email "));

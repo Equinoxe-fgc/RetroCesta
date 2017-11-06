@@ -1,4 +1,25 @@
 <resources>
     <string name="app_name">Retro Cesta ALTAIR</string>
     <string name="action_settings">Ajustes</string>
+    <string name="eMailGestor">E-mail del gestor:</string>
+    <string name="Guardar">Guardar</string>
+    <string name="ComprarBoletos">Comprar boletos</string>
+    <string name="Nick">Nick</string>
+    <string name="Nombre">Nombre</string>
+    <string name="Correo">Correo</string>
+    <string name="Aleatorios">Aleatorios</string>
+    <string name="PorPeticion">Por petición</string>
+    <string name="Cantidad">Cantidad</string>
+    <string name="Disponibilidad">Disponibilidad</string>
+    <string name="Comprar">Comprar</string>
+    <string name="DevolverBoletos">Devolver Boletos</string>
+    <string name="TodosLosboletos">Todos los boletos</string>
+    <string name="DeUnUsuario">De un usuario</string>
+    <string name="Devolver">Devolver</string>
+    <string name="Listados">Listados</string>
+    <string name="CompletoPorUsuario">Completo por usuario</string>
+    <string name="CompeltoPorNumero">Compelto por número</string>
+    <string name="PorUsuario">Por usuario</string>
+    <string name="GenerarListado">Generar listado</string>
+    <string name="BoletosDisponibles">Boletos disponibles</string>
 </resources>
