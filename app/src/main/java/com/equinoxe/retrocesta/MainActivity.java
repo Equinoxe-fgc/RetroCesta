@@ -20,6 +20,8 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
+    final static int NUM_BOLETOS = 2000;
+
     private int iBoletosLibres;
     private TextView tvBoletosDisponibles;
 
@@ -79,13 +81,13 @@ public class MainActivity extends AppCompatActivity {
         // Si no hay registros se crean todos
         if (filas.getCount() == 0) {
             ContentValues registro = new ContentValues();
-            for (int i=0;i<1000;i++) {
+            for (int i=0;i<NUM_BOLETOS;i++) {
                 registro.put("numero",i);
                 registro.put("libre",1);
                 registro.put("nick","");
                 db.insert("numeros",null,registro);
             }
-            iBoletosLibres = 1000;
+            iBoletosLibres = NUM_BOLETOS;
         } else {
             String params[] = new String[1];
             params[0] = Integer.toString(1);
@@ -93,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
             iBoletosLibres = filas.getCount();
         }
 
+        filas.close();
         db.close();
 
         tvBoletosDisponibles.setText(Integer.toString(iBoletosLibres));
