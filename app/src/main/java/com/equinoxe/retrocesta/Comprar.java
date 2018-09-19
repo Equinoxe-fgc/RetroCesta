@@ -198,18 +198,21 @@ public class Comprar extends AppCompatActivity {
     public void enviarCorreoElectronico(View v) {
             Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
             emailIntent.setData(Uri.parse("mailto:"));
-            String[] to = {sEMail};
-            String[] cc = {etCorreo.getText().toString()};
+            String[] to = {etCorreo.getText().toString()};
+            String[] cc = {sEMail};
             String sMensaje = "Los números asignados de la RetroCesta son:";
 
             String filename;
             File filelocation;
             ArrayList<Uri> uris = new ArrayList<Uri>();
             for (int i = 0; i < iNumBoletosSeleccionados; i++) {
-                sMensaje = sMensaje + " " + iBoletosSeleccionados[i];
+                sMensaje = sMensaje + " " + iBoletosSeleccionados[i] + " " +
+                                            (iBoletosSeleccionados[i] + 2000) + " " +
+                                            (iBoletosSeleccionados[i] + 4000) + " " +
+                                            (iBoletosSeleccionados[i] + 8000);
 
-                filename = "Papeletas " + iBoletosSeleccionados[i] + ".pdf";
-                filelocation = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/RetroCesta", filename);
+                filename = "RetroCesta_Papeletas " + iBoletosSeleccionados[i] + ".pdf";
+                filelocation = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/RetroCesta/", filename);
                 Uri u = Uri.fromFile(filelocation);
                 uris.add(u);
             }
