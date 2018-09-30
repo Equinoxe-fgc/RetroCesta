@@ -200,7 +200,8 @@ public class Comprar extends AppCompatActivity {
             emailIntent.setData(Uri.parse("mailto:"));
             String[] to = {etCorreo.getText().toString()};
             String[] cc = {sEMail};
-            String sMensaje = "Los números asignados de la RetroCesta son:\n";
+            String sMensaje = "Gracias " + etNick.getText().toString() + " por participar en la Retro Cesta de Retro Entre Amigos.\n\n";
+            sMensaje += "Tus números asignados son:\n";
 
             String filename;
             File filelocation;
@@ -218,7 +219,7 @@ public class Comprar extends AppCompatActivity {
             }
             emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
 
-            sMensaje += "\nGracias por participar y suerte.";
+            sMensaje += "\nSuerte.";
 
             emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
             emailIntent.putExtra(Intent.EXTRA_CC, cc);
