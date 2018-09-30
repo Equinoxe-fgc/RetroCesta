@@ -210,6 +210,7 @@ public class Comprar extends AppCompatActivity {
                 sMensaje = sMensaje + " " + iBoletosSeleccionados[i] + " " +
                                             (iBoletosSeleccionados[i] + 2000) + " " +
                                             (iBoletosSeleccionados[i] + 4000) + " " +
+                                            (iBoletosSeleccionados[i] + 6000) + " " +
                                             (iBoletosSeleccionados[i] + 8000) + "\n";
 
                 filename = "RetroCesta_Papeletas " + iBoletosSeleccionados[i] + ".pdf";
@@ -219,6 +220,7 @@ public class Comprar extends AppCompatActivity {
             }
             emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
 
+            sMensaje += "\n\nPuedes encontrar las papeletas adjuntas a este correo.";
             sMensaje += "\nSuerte.";
 
             emailIntent.putExtra(Intent.EXTRA_EMAIL, to);
