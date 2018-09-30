@@ -55,8 +55,12 @@ public class Listados extends AppCompatActivity {
             listadoCompletoPorUsuario();
         else if (rbPorNumero.isChecked())
             listadoCompletoPorNumero();
-        else
-            listadoSoloUsuario();
+        else {
+            if (spinUsuarios.getCount() == 0)
+                Toast.makeText(this, "No hay usuarios seleccionados.", Toast.LENGTH_SHORT).show();
+            else
+                listadoSoloUsuario();
+        }
     }
 
 
@@ -100,6 +104,8 @@ public class Listados extends AppCompatActivity {
             } catch (IOException ioe) {
                 Toast.makeText(this, "Error al grabar archivo", Toast.LENGTH_SHORT).show();
             }
+        } else {
+            Toast.makeText(this, "No hay papeletas para listar.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -141,6 +147,8 @@ public class Listados extends AppCompatActivity {
             }
             etListadoNumeros.setText(sNumeros);
             db.close();
+        }  else {
+            Toast.makeText(this, "No hay papeletas para listar.", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -177,6 +185,8 @@ public class Listados extends AppCompatActivity {
             } catch (IOException ioe) {
                 Toast.makeText(this, "Error al grabar archivo", Toast.LENGTH_SHORT).show();
             }
+        }   else {
+            Toast.makeText(this, "No hay papeletas para listar.", Toast.LENGTH_SHORT).show();
         }
     }
 }

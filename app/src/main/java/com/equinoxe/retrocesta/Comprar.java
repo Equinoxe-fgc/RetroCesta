@@ -200,7 +200,7 @@ public class Comprar extends AppCompatActivity {
             emailIntent.setData(Uri.parse("mailto:"));
             String[] to = {etCorreo.getText().toString()};
             String[] cc = {sEMail};
-            String sMensaje = "Los números asignados de la RetroCesta son:";
+            String sMensaje = "Los números asignados de la RetroCesta son:\n";
 
             String filename;
             File filelocation;
@@ -209,7 +209,7 @@ public class Comprar extends AppCompatActivity {
                 sMensaje = sMensaje + " " + iBoletosSeleccionados[i] + " " +
                                             (iBoletosSeleccionados[i] + 2000) + " " +
                                             (iBoletosSeleccionados[i] + 4000) + " " +
-                                            (iBoletosSeleccionados[i] + 8000);
+                                            (iBoletosSeleccionados[i] + 8000) + "\n";
 
                 filename = "RetroCesta_Papeletas " + iBoletosSeleccionados[i] + ".pdf";
                 filelocation = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/RetroCesta/", filename);
