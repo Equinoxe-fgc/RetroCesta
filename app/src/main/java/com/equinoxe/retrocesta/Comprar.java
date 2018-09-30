@@ -207,7 +207,7 @@ public class Comprar extends AppCompatActivity {
             File filelocation;
             ArrayList<Uri> uris = new ArrayList<Uri>();
             for (int i = 0; i < iNumBoletosSeleccionados; i++) {
-                sMensaje = sMensaje + " " + iBoletosSeleccionados[i] + " " +
+                sMensaje = sMensaje + " " + String.format("%04d", iBoletosSeleccionados[i]) + " " +
                                             (iBoletosSeleccionados[i] + 2000) + " " +
                                             (iBoletosSeleccionados[i] + 4000) + " " +
                                             (iBoletosSeleccionados[i] + 6000) + " " +
@@ -220,7 +220,7 @@ public class Comprar extends AppCompatActivity {
             }
             emailIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
 
-            sMensaje += "\n\nPuedes encontrar las papeletas adjuntas a este correo.";
+            sMensaje += "\nPuedes encontrar las papeletas adjuntas a este correo.";
             sMensaje += "\nSuerte.";
 
             emailIntent.putExtra(Intent.EXTRA_EMAIL, to);

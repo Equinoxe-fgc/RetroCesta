@@ -140,7 +140,7 @@ public class Listados extends AppCompatActivity {
         if (filas.getCount() != 0) {
             String sNumeros = "";
             for (int i = 0; i < filas.getCount(); i++) {
-                sNumeros += filas.getString(0);
+                sNumeros += String.format("%04d", filas.getInt(0));
                 if (i != filas.getCount() - 1)
                     sNumeros += " - ";
                 filas.moveToNext();
