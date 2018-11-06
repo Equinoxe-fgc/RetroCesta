@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Random;
 
 public class Comprar extends AppCompatActivity {
     EditText etNick, etNombre, etCorreo, etCantidad, etListaBoletos;
@@ -146,11 +147,17 @@ public class Comprar extends AppCompatActivity {
 
             iNumBoletosSeleccionados = Integer.parseInt(sNumBoletos);
 
-            if (filas.getCount() > iNumBoletosSeleccionados) {
-                filas.moveToFirst();
+            if (filas.getCount() >= iNumBoletosSeleccionados) {
+                /*filas.moveToFirst();
                 for (int  i=0; i < iNumBoletosSeleccionados; i++) {
                     iBoletosSeleccionados[i] = filas.getInt(0);
                     filas.moveToNext();
+                }*/
+                int iElegidos[] = new int[iNumBoletosSeleccionados];
+                elegirNumerosAleatorios(iElegidos, filas.getCount());
+                for (int  i=0; i < iNumBoletosSeleccionados; i++) {
+                    filas.moveToPosition(iElegidos[i]);
+                    iBoletosSeleccionados[i] = filas.getInt(0);
                 }
             }
             else {
@@ -194,6 +201,29 @@ public class Comprar extends AppCompatActivity {
 
         return bDispOK;
     }
+
+    private void elegirNumerosAleatorios(int iElegidos[], int iNumMax) {
+        Random randomGenerator = new Random();
+        int randomInt;
+        int iEncontrados = 0;
+        boolean bEnLista;
+
+        while (iEncontrados != iElegidos.length) {
+            randomInt = randomGenerator.nextInt(iNumMax);
+
+            bEnLista = false;
+            for (int i = 0; !bEnLista && i < iEncontrados; i++) {
+                if (randomInt == iElegidos[i])
+                    bEnLista = true;
+            }
+
+            if (!bEnLista) {
+                iElegidos[iEncontrados] = randomInt;
+                iEncontrados++;
+            }
+        }
+    }
+
 
     public void enviarCorreoElectronico(View v) {
             Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);

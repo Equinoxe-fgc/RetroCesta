@@ -81,7 +81,12 @@ public class Listados extends AppCompatActivity {
                 boletos.moveToFirst();
 
                 for (int iBoleto = 0; iBoleto < boletos.getCount(); iBoleto++) {
-                    sFicheroCSV[i] += "," + boletos.getString(0);
+                    int iNumero = boletos.getInt(0);
+                    sFicheroCSV[i] += "," + String.format("%04d", iNumero) +
+                                      "," + String.format("%04d", iNumero+2000) +
+                                      "," + String.format("%04d", iNumero+4000) +
+                                      "," + String.format("%04d", iNumero+6000) +
+                                      "," + String.format("%04d", iNumero+8000);
                     boletos.moveToNext();
                 }
             }
@@ -140,7 +145,12 @@ public class Listados extends AppCompatActivity {
         if (filas.getCount() != 0) {
             String sNumeros = "";
             for (int i = 0; i < filas.getCount(); i++) {
-                sNumeros += String.format("%04d", filas.getInt(0));
+                int iNumero = filas.getInt(0);
+                sNumeros += String.format("%04d ", iNumero);
+                sNumeros += String.format("%04d ", iNumero+2000);
+                sNumeros += String.format("%04d ", iNumero+4000);
+                sNumeros += String.format("%04d ", iNumero+6000);
+                sNumeros += String.format("%04d ", iNumero+8000);
                 if (i != filas.getCount() - 1)
                     sNumeros += " - ";
                 filas.moveToNext();
@@ -160,10 +170,25 @@ public class Listados extends AppCompatActivity {
         numeros.moveToFirst();
 
         if (numeros.getCount() != 0) {
-            String sFicheroCSV[] = new String[numeros.getCount()];
+            String sFicheroCSV[] = new String[5 * numeros.getCount()];
             for (int i = 0; i < numeros.getCount(); i++) {
-                sFicheroCSV[i] = numeros.getString(0);
-                sFicheroCSV[i] += "," + numeros.getString(1);
+                int iNumero = numeros.getInt(0);
+
+                sFicheroCSV[5*i] = String.format("%04d", iNumero);
+                sFicheroCSV[5*i] += "," + numeros.getString(1);
+
+                sFicheroCSV[5*i+1] = String.format("%04d", iNumero + 2000);
+                sFicheroCSV[5*i+1] += "," + numeros.getString(1);
+
+                sFicheroCSV[5*i+2] = String.format("%04d", iNumero + 4000);
+                sFicheroCSV[5*i+2] += "," + numeros.getString(1);
+
+                sFicheroCSV[5*i+3] = String.format("%04d", iNumero + 6000);
+                sFicheroCSV[5*i+3] += "," + numeros.getString(1);
+
+                sFicheroCSV[5*i+4] = String.format("%04d", iNumero + 8000);
+                sFicheroCSV[5*i+4] += "," + numeros.getString(1);
+
                 numeros.moveToNext();
             }
             db.close();
