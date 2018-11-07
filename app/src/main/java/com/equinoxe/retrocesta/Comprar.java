@@ -1,7 +1,9 @@
 package com.equinoxe.retrocesta;
 
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -25,6 +27,9 @@ public class Comprar extends AppCompatActivity {
     EditText etNick, etNombre, etCorreo, etCantidad, etListaBoletos;
     RadioButton rbAleatorio, rbPeticion;
     TextView tvCantidad;
+
+    AdminSQLiteOpenHelper admin;
+    SQLiteDatabase db;
 
     int iBoletosSeleccionados[];
     int iNumBoletosSeleccionados;
@@ -50,6 +55,15 @@ public class Comprar extends AppCompatActivity {
         iBoletosSeleccionados = new int[100];
 
         cargarEMail();
+
+        admin = new AdminSQLiteOpenHelper(this,"RetroCesta",null,1);
+        db = admin.getWritableDatabase();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        db.close();
     }
 
     protected void onRestart() {
@@ -74,7 +88,7 @@ public class Comprar extends AppCompatActivity {
         }
     }
 
-    public void comprar (View v) {
+    public void comprar (final View v) {
         if (checkDisponibilidad()) {
             String sNick = etNick.getText().toString();
             String sNombre = etNombre.getText().toString();
@@ -85,23 +99,47 @@ public class Comprar extends AppCompatActivity {
                 return;
             }
 
-            AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"RetroCesta",null,1);
-            SQLiteDatabase db = admin.getWritableDatabase();
+            Cursor filas = db.rawQuery("select * from datos where nick = " + sNick,null);
+            // Si ya hay alguien con ese nick
+            if (filas.getCount() != 0) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Ya hay un usuario con el nick: " + sNick + ". ¿Quiere asignarle las nuevas papeletas?").setTitle("Nick ya existente");
+                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        String sNick = etNick.getText().toString();
+                        for (int i = 0; i < iNumBoletosSeleccionados; i++) {
+                            ContentValues registro = new ContentValues();
+                            registro.put("libre", 0);
+                            registro.put("nick", sNick);
+                            db.update("numeros", registro, "numero = " + iBoletosSeleccionados[i], null);
+                        }
 
-            for (int i = 0; i < iNumBoletosSeleccionados; i++) {
-                ContentValues registro = new ContentValues();
-                //registro.put("numero",i);
-                registro.put("libre",0);
-                registro.put("nick", sNick);
-                db.update("numeros", registro, "numero = " + iBoletosSeleccionados[i],null);
+                        enviarCorreoElectronico(v);
+                        //Toast.makeText(this, "Boletos comprados por " + sNick + ": " + iNumBoletosSeleccionados, Toast.LENGTH_LONG).show();
+                    }
+                });
+                builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            } else {
+                for (int i = 0; i < iNumBoletosSeleccionados; i++) {
+                    ContentValues registro = new ContentValues();
+                    registro.put("libre", 0);
+                    registro.put("nick", sNick);
+                    db.update("numeros", registro, "numero = " + iBoletosSeleccionados[i], null);
+                }
+
+                String sSQL = "insert into datos values ('" + sNick + "','" + sNombre + "','" + sCorreo + "')";
+                db.execSQL(sSQL);
+
+                enviarCorreoElectronico(v);
+                Toast.makeText(this, "Boletos comprados por " + sNick + ": " + iNumBoletosSeleccionados, Toast.LENGTH_LONG).show();
             }
 
-            String sSQL = "insert into datos values ('" + sNick + "','" + sNombre + "','" + sCorreo + "')";
-            db.execSQL(sSQL);
-            db.close();
-
-            enviarCorreoElectronico(v);
-            Toast.makeText(this, "Boletos comprados por " + sNick + ": " + iNumBoletosSeleccionados, Toast.LENGTH_LONG).show();
             finish();
         }
     }
@@ -139,9 +177,6 @@ public class Comprar extends AppCompatActivity {
         String sNumBoletos = etCantidad.getText().toString();
         String sListaBoletos = etListaBoletos.getText().toString();
 
-        AdminSQLiteOpenHelper admin = new AdminSQLiteOpenHelper(this,"RetroCesta",null,1);
-        SQLiteDatabase db = admin.getWritableDatabase();
-
         if (rbAleatorio.isChecked()) {
             filas = db.rawQuery("select numero from numeros where libre = 1",null);
 
@@ -177,8 +212,8 @@ public class Comprar extends AppCompatActivity {
                 for (int  i=0; i < iNumBoletosSeleccionados; i++) {
                     iNumeroActual = Integer.parseInt(sBoletos[i]);
 
-                    if (iNumeroActual < 0 || iNumeroActual > 999) {
-                        Toast.makeText(this, "Los boletos deben estar entre 0 y 999: " + iNumeroActual, Toast.LENGTH_SHORT).show();
+                    if (iNumeroActual < 0 || iNumeroActual > 1999) {
+                        Toast.makeText(this, "Los boletos deben estar entre 0 y 1999: " + iNumeroActual, Toast.LENGTH_SHORT).show();
                         bDispOK = false;
                         continue;
                     }
@@ -197,7 +232,6 @@ public class Comprar extends AppCompatActivity {
                 bDispOK = false;
             }
         }
-        db.close();
 
         return bDispOK;
     }
