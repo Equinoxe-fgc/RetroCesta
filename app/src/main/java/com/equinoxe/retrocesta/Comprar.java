@@ -13,6 +13,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioButton;
@@ -88,7 +89,7 @@ public class Comprar extends AppCompatActivity {
         }
     }
 
-    public void comprar (final View v) {
+    public void comprar (View v) {
         if (checkDisponibilidad()) {
             String sNick = etNick.getText().toString();
             String sNombre = etNombre.getText().toString();
@@ -99,7 +100,7 @@ public class Comprar extends AppCompatActivity {
                 return;
             }
 
-            Cursor filas = db.rawQuery("select * from datos where nick = " + sNick,null);
+            Cursor filas = db.rawQuery("select * from datos where nick = \"" + sNick + "\"",null);
             // Si ya hay alguien con ese nick
             if (filas.getCount() != 0) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -114,8 +115,9 @@ public class Comprar extends AppCompatActivity {
                             db.update("numeros", registro, "numero = " + iBoletosSeleccionados[i], null);
                         }
 
-                        enviarCorreoElectronico(v);
+                        enviarCorreoElectronico();
                         //Toast.makeText(this, "Boletos comprados por " + sNick + ": " + iNumBoletosSeleccionados, Toast.LENGTH_LONG).show();
+                        finish();
                     }
                 });
                 builder.setNegativeButton("Cancelar", new DialogInterface.OnClickListener() {
@@ -136,11 +138,10 @@ public class Comprar extends AppCompatActivity {
                 String sSQL = "insert into datos values ('" + sNick + "','" + sNombre + "','" + sCorreo + "')";
                 db.execSQL(sSQL);
 
-                enviarCorreoElectronico(v);
+                enviarCorreoElectronico();
                 Toast.makeText(this, "Boletos comprados por " + sNick + ": " + iNumBoletosSeleccionados, Toast.LENGTH_LONG).show();
+                finish();
             }
-
-            finish();
         }
     }
 
@@ -259,7 +260,7 @@ public class Comprar extends AppCompatActivity {
     }
 
 
-    public void enviarCorreoElectronico(View v) {
+    public void enviarCorreoElectronico() {
             Intent emailIntent = new Intent(Intent.ACTION_SEND_MULTIPLE);
             emailIntent.setData(Uri.parse("mailto:"));
             String[] to = {etCorreo.getText().toString()};
@@ -292,6 +293,10 @@ public class Comprar extends AppCompatActivity {
             emailIntent.putExtra(Intent.EXTRA_SUBJECT, "RetroCesta de RetroEntreAmigos.com: Números asignados");
             emailIntent.putExtra(Intent.EXTRA_TEXT,sMensaje);
             emailIntent.setType("message/rfc822");
-            startActivity(Intent.createChooser(emailIntent, "Email "));
+            try {
+                startActivity(Intent.createChooser(emailIntent, "Email "));
+            }catch (Exception e) {
+                Log.d("Error", e.getMessage());
+            }
     }
 }
